@@ -37,17 +37,21 @@ module WebScraperProject
           ans = []
           results.each do |outer_div|
             given_date = get_date(outer_div)
-            # binding.pry
             if reference.nil? || (reference >= given_date)
-              title = get_title(outer_div)
-              details = get_details(outer_div)
-              date = string_date(given_date)
-              summary = get_desc(outer_div)
-              url = get_url(outer_div)
-              ans << ([title,url,date,summary] + details)
+              nodes = gather_nodes(outer_div,given_date)
+              ans << nodes
             end
           end
           ans
+        end
+
+        def gather_nodes(div_node,given_date)
+          title = get_title(div_node)
+          details = get_details(div_node)
+          date = string_date(given_date)
+          summary = get_desc(div_node)
+          url = get_url(div_node)
+          [title,url,date,summary,] + details
         end
 
         def get_details(result)
@@ -111,14 +115,5 @@ module WebScraperProject
 
 end
 
-results = WebScraperProject::WebScraper.run('https://www.dice.com/jobs?q=web+developer&l=San+Jose&limit=5',Time.new)
+results = WebScraperProject::WebScraper.run('https://www.dice.com/jobs?q=web+developer&l=San+Jose&limit=20',Time.new)
 WebScraperProject::WebScraper.to_csv(results)
-
-
-# h3 includes a link that has the job title
-# div class "shortdesc" contains a short description
-# ul class "list-inline details" contains li's "employer", "location", "posted"
-
-
-
-#
