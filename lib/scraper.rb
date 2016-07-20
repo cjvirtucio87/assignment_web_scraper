@@ -56,6 +56,7 @@ module WebScraperProject
 
         def get_details(result)
           job_page = result.at('h3').at('a')
+          #Refactor: gather everything in one click event
           employer = @agent.click(job_page).at('li.employer').text.strip
           employer_id = @agent.click(job_page).at('div.company-header-info').css('div')[1].text.strip
           job_id = @agent.click(job_page).at('div.company-header-info').css('div')[2].text.strip
@@ -81,7 +82,7 @@ module WebScraperProject
         end
 
         def format_date(date)
-          date_arr = date.split(" ")
+          date_arr = date.split(" ") 
           num = date_arr[0].to_i
           time = date_arr[1]
           converted = convert_date(num,time)
@@ -96,7 +97,7 @@ module WebScraperProject
           case time
           when "ago"
             0
-          when "hours"
+          when "hours" || "hour"
             num * 60*60
           when "days"
             num * 60*60*24
@@ -115,5 +116,5 @@ module WebScraperProject
 
 end
 
-results = WebScraperProject::WebScraper.run('https://www.dice.com/jobs?q=web+developer&l=San+Jose&limit=20',Time.new)
+results = WebScraperProject::WebScraper.run('https://www.dice.com/jobs?q=web+developer&l=San+Jose&limit=20')
 WebScraperProject::WebScraper.to_csv(results)
